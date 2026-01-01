@@ -1,15 +1,22 @@
 import unittest
 from pathlib import Path
+import sys
+import os 
 
-from .. import app
+pkgPath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if pkgPath not in sys.path: sys.path.append(pkgPath)
 
-class testClass:
+from core import app
+
+class testClass(unittest.TestCase):
 
     def testDataExists(self):
-       assertTrue(Path(app.jsonPath).exists())
+      self.assertTrue(Path(app.jsonPath).exists(),
+                      'Data not found')
+      
+    def testDataLoads(self):
+      self.assertIsInstance(app.readJson(app.jsonPath), dict,
+                      'The data is not a valid JSON')
 
-
- if __name__ == '__main__':
-    unittest.main()
-
-
+if __name__ == '__main__':
+   unittest.main()
